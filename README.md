@@ -68,4 +68,4 @@ F5 (Run Extension)로 Extension Development Host에서 실행할 수 있습니�
 
 ## 라이선스
 
-MIT License © pascman (LICENSE 파일 참고)
+[MIT](LICENSE) © pascman

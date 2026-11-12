@@ -6,3 +6,6 @@ out/**
 **/*.ts
 tsconfig.json
 esbuild.mjs
+images/*.webp
+.gitignore
+*.vsix

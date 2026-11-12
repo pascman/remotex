@@ -2,10 +2,19 @@
   "name": "remotex",
   "displayName": "Remotex",
   "description": "Browse and edit files on SFTP, FTP and FTPS servers directly in the VS Code explorer.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "pascman",
   "author": "pascman",
   "license": "MIT",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pascman/remotex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pascman/remotex/issues"
+  },
+  "homepage": "https://github.com/pascman/remotex#readme",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -175,7 +184,7 @@
     "watch": "node esbuild.mjs --watch",
     "typecheck": "tsc --noEmit",
     "vscode:prepublish": "npm run typecheck && node esbuild.mjs --production",
-    "package": "vsce package --allow-missing-repository"
+    "package": "vsce package"
   },
   "dependencies": {
     "basic-ftp": "^5.0.5",
