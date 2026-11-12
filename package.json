@@ -1,0 +1,192 @@
+{
+  "name": "remotex",
+  "displayName": "Remotex",
+  "description": "Browse and edit files on SFTP, FTP and FTPS servers directly in the VS Code explorer.",
+  "version": "0.1.0",
+  "publisher": "pascman",
+  "author": "pascman",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "sftp",
+    "ftp",
+    "ftps",
+    "ssh",
+    "remote"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onFileSystem:remotex"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "remotex.connect",
+        "title": "Connect to Remote (add to workspace)",
+        "category": "Remotex"
+      },
+      {
+        "command": "remotex.openInNewWindow",
+        "title": "Open Remote in New Window",
+        "category": "Remotex"
+      },
+      {
+        "command": "remotex.disconnect",
+        "title": "Disconnect Remote",
+        "category": "Remotex"
+      },
+      {
+        "command": "remotex.addRemote",
+        "title": "Add Remote Server...",
+        "category": "Remotex"
+      },
+      {
+        "command": "remotex.clearPassword",
+        "title": "Forget Saved Password",
+        "category": "Remotex"
+      },
+      {
+        "command": "remotex.openSettings",
+        "title": "Open Remote Settings",
+        "category": "Remotex"
+      },
+      {
+        "command": "remotex.showLog",
+        "title": "Show Log",
+        "category": "Remotex"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "remotex.disconnect",
+          "when": "explorerResourceIsRoot && resourceScheme == remotex",
+          "group": "z_remote@1"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "explorer",
+        "contents": "Work directly on an SFTP / FTP server.\n[Connect to Remote](command:remotex.connect)\n[Add Remote Server](command:remotex.addRemote)",
+        "when": "workspaceFolderCount == 0"
+      }
+    ],
+    "configuration": {
+      "title": "Remotex",
+      "properties": {
+        "remotex.remotes": {
+          "type": "object",
+          "default": {},
+          "markdownDescription": "Remote servers, keyed by a display name. Example:\n```json\n\"remotex.remotes\": {\n  \"my-server\": { \"protocol\": \"sftp\", \"host\": \"example.com\", \"username\": \"me\", \"rootPath\": \"/var/www\" }\n}\n```",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "protocol",
+              "host"
+            ],
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "sftp",
+                  "ftp"
+                ],
+                "description": "Connection protocol. Use \"ftp\" with \"secure\" for FTPS."
+              },
+              "host": {
+                "type": "string",
+                "description": "Server hostname or IP."
+              },
+              "port": {
+                "type": "number",
+                "description": "Port (default: 22 for sftp, 21 for ftp, 990 for implicit FTPS)."
+              },
+              "username": {
+                "type": "string",
+                "description": "Login user. For FTP defaults to \"anonymous\"."
+              },
+              "password": {
+                "type": "string",
+                "description": "Plain-text password (not recommended). Leave empty to be prompted; the password is then kept in the OS keychain."
+              },
+              "rootPath": {
+                "type": "string",
+                "default": "/",
+                "description": "Remote directory shown as the workspace folder root."
+              },
+              "privateKeyPath": {
+                "type": "string",
+                "description": "SFTP only: path to a private key file (e.g. ~/.ssh/id_ed25519)."
+              },
+              "passphrase": {
+                "type": "string",
+                "description": "SFTP only: passphrase for the private key."
+              },
+              "agent": {
+                "type": [
+                  "boolean",
+                  "string"
+                ],
+                "description": "SFTP only: true to use the default SSH agent (SSH_AUTH_SOCK, or the Windows OpenSSH agent), \"pageant\", or a socket/pipe path."
+              },
+              "secure": {
+                "enum": [
+                  false,
+                  true,
+                  "implicit"
+                ],
+                "default": false,
+                "description": "FTP only: true = explicit FTPS (AUTH TLS), \"implicit\" = implicit FTPS."
+              },
+              "allowUnauthorizedCert": {
+                "type": "boolean",
+                "default": false,
+                "description": "FTPS only: accept self-signed / invalid TLS certificates."
+              },
+              "encoding": {
+                "type": "string",
+                "default": "utf8",
+                "description": "FTP only: encoding of file names on the server (e.g. utf8, latin1)."
+              },
+              "connectTimeout": {
+                "type": "number",
+                "default": 20000,
+                "description": "Connection timeout in milliseconds."
+              }
+            }
+          }
+        },
+        "remotex.rememberPasswords": {
+          "type": "boolean",
+          "default": true,
+          "description": "Store passwords entered at the prompt in the OS keychain (VS Code SecretStorage)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "vscode:prepublish": "npm run typecheck && node esbuild.mjs --production",
+    "package": "vsce package --allow-missing-repository"
+  },
+  "dependencies": {
+    "basic-ftp": "^5.0.5",
+    "ssh2": "^1.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "@types/ssh2": "^1.15.1",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.3"
+  }
+}
